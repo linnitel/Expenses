@@ -12,7 +12,7 @@ struct AddView: View {
 
 	@State private var name = ""
 	@State private var type = "Personal"
-	@State private var amount = 0.0
+	@State private var amount: Double = 0.0
 	@State private var currancyCode = "USD"
 
 	var expenses: Expenses

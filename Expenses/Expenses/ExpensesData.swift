@@ -13,6 +13,16 @@ struct ExpenseItem: Identifiable, Codable {
 	let type: String
 	let amount: Double
 	let currancy: String
+
+	var color: Color {
+		if amount < 10 {
+			return .green
+		} else if amount < 100 {
+			return .yellow
+		} else {
+			return .red
+		}
+	}
 }
 
 @Observable
