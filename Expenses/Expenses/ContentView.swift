@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
-	@State private var expenses = Expenses()
+	@Environment(\.modelContext) var modelContext
+	@Query var expensesQuery: [ExpenseItem]
 
 	@State private var showAddExpenseView: Bool = false
 
@@ -16,7 +18,7 @@ struct ContentView: View {
 		NavigationStack {
 			List {
 				Section("Personal") {
-					ForEach(expenses.items) { item in
+					ForEach(expensesQuery) { item in
 						if item.type == "Personal" {
 							CellView(item: item)
 						}
@@ -24,7 +26,7 @@ struct ContentView: View {
 					.onDelete(perform: removeItems)
 				}
 				Section("Business") {
-					ForEach(expenses.items) { item in
+					ForEach(expensesQuery) { item in
 						if item.type == "Business" {
 							CellView(item: item)
 						}
@@ -35,7 +37,7 @@ struct ContentView: View {
 			.navigationTitle("iExpenses")
 			.toolbar {
 				NavigationLink (destination: {
-					AddView(expenses: expenses)
+					AddView()
 				}, label: {
 					Image(systemName: "plus")
 				})
@@ -44,7 +46,10 @@ struct ContentView: View {
 	}
 
 	func removeItems(at offsets: IndexSet) {
-		expenses.items.remove(atOffsets: offsets)
+		for offset in offsets {
+			let item = expensesQuery[offset]
+			modelContext.delete(item)
+		}
 	}
 }
 
